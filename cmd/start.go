@@ -45,6 +45,7 @@ func init() {
 	rootCmd.AddCommand(startCmd)
 }
 
+//nolint:gocyclo
 func runStart(cmd *cobra.Command, args []string) error {
 	cfg, err := config.Load()
 	if err != nil {
@@ -57,7 +58,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 		if cfg.RememberResume && cfg.LastResumePath != "" {
 			fmt.Printf("Use cached resume from %s? [Y/n]: ", cfg.LastResumePath)
 			var resp string
-			fmt.Scanln(&resp)
+			_, _ = fmt.Scanln(&resp)
 			if resp != "n" && resp != "no" {
 				resumePath = cfg.LastResumePath
 			}
@@ -90,7 +91,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 		spinner.Stop()
 		fmt.Println("Using cached resume")
 	} else {
-		store.CacheResume(parseResult.Hash, parseResult.RawText)
+		_ = store.CacheResume(parseResult.Hash, parseResult.RawText)
 		spinner.Stop()
 	}
 
@@ -175,7 +176,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 		<-sigCh
 		fmt.Println("\n\nSession interrupted. Saving...")
 		session.MarkAborted()
-		store.SaveSession(session)
+		_ = store.SaveSession(session)
 		fmt.Printf("Session saved. Resume with: prep review %s\n", session.ID)
 		os.Exit(0)
 	}()
@@ -194,7 +195,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 		action, _ := interview.ParseAnswer(answer)
 		if action == "quit" {
 			session.MarkAborted()
-			store.SaveSession(session)
+			_ = store.SaveSession(session)
 			fmt.Printf("Session saved. Resume with: prep review %s\n", session.ID)
 			return nil
 		}
@@ -246,7 +247,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 			action, _ := interview.ParseAnswer(fua)
 			if action == "quit" {
 				session.MarkAborted()
-				store.SaveSession(session)
+				_ = store.SaveSession(session)
 				fmt.Printf("Session saved. Resume with: prep review %s\n", session.ID)
 				return nil
 			}

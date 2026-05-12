@@ -14,7 +14,7 @@ func parsePDF(path string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("opening PDF: %w", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	var buf bytes.Buffer
 	for i := 1; i <= r.NumPage(); i++ {

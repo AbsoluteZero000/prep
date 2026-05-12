@@ -11,12 +11,12 @@ import (
 )
 
 func TestDetectFormat_PDF(t *testing.T) {
-	fmt_, err := DetectFormat("testdata/resumes/sample.pdf")
+	_, err := DetectFormat("testdata/resumes/sample.pdf")
 	if err != ErrFileNotFound {
 		t.Fatalf("expected ErrFileNotFound for missing sample.pdf, got %v", err)
 	}
 
-	fmt_, err = DetectFormat("testdata/resumes/empty.pdf")
+	fmt_, err := DetectFormat("testdata/resumes/empty.pdf")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -116,6 +116,8 @@ func TestParse_PDFWithContent(t *testing.T) {
 
 // resumeContent is a realistic resume text used for PDF extraction tests.
 // It must be long enough (>50 words) to pass heuristic validation.
+//
+//nolint:misspell
 const resumeContent = `Ahmed Wael Wanas
 Software Engineer
 Giza Egypt

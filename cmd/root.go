@@ -27,7 +27,7 @@ evaluates your answers, and provides feedback to help you improve.`,
 		return initConfig()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+		_ = cmd.Help()
 	},
 }
 

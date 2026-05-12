@@ -82,7 +82,7 @@ func TurnDuration(startedAt time.Time) time.Duration {
 // newSessionID generates a short unique session identifier.
 func newSessionID() string {
 	b := make([]byte, 6)
-	rand.Read(b)
+	_, _ = rand.Read(b)
 	return hex.EncodeToString(b)
 }
 

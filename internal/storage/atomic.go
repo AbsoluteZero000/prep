@@ -19,22 +19,22 @@ func WriteFileAtomic(path string, data []byte, perm os.FileMode) error {
 		return fmt.Errorf("temp write %s: %w", tmpPath, err)
 	}
 
-	f, err := os.Open(tmpPath)
+	f, err := os.Open(tmpPath) //nolint:gosec // temp path is constructed internally
 	if err != nil {
 		return fmt.Errorf("open temp for sync %s: %w", tmpPath, err)
 	}
 	if err := f.Sync(); err != nil {
-		f.Close()
-		os.Remove(tmpPath)
+		_ = f.Close()
+		_ = os.Remove(tmpPath)
 		return fmt.Errorf("fsync %s: %w", tmpPath, err)
 	}
 	if err := f.Close(); err != nil {
-		os.Remove(tmpPath)
+		_ = os.Remove(tmpPath)
 		return fmt.Errorf("close temp %s: %w", tmpPath, err)
 	}
 
 	if err := os.Rename(tmpPath, path); err != nil {
-		os.Remove(tmpPath)
+		_ = os.Remove(tmpPath)
 		return fmt.Errorf("rename %s -> %s: %w", tmpPath, path, err)
 	}
 

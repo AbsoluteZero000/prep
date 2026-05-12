@@ -33,14 +33,14 @@ type ParseResult struct {
 
 // DetectFormat identifies the resume format by extension and magic bytes.
 func DetectFormat(path string) (Format, error) {
-	f, err := os.Open(path)
+	f, err := os.Open(path) //nolint:gosec // user-provided path is intentional
 	if err != nil {
 		if os.IsNotExist(err) {
 			return FormatUnknown, ErrFileNotFound
 		}
 		return FormatUnknown, fmt.Errorf("opening file: %w", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	header := make([]byte, 8)
 	n, _ := f.Read(header)
@@ -154,6 +154,8 @@ func Parse(path string) (ParseResult, error) {
 
 // TruncateToTokenBudget trims text to fit within maxTokens by dropping sections
 // from the bottom, preserving contact info, skills, and recent experience.
+//
+//nolint:gocyclo
 func TruncateToTokenBudget(text string, maxTokens int) string {
 	sections := strings.Split(text, "\n\n")
 	if len(sections) <= 1 {

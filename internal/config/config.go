@@ -82,7 +82,7 @@ func Load() (*Config, error) {
 		return cfg, nil
 	}
 
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) //nolint:gosec // config path is user-controlled by design
 	if err != nil {
 		if os.IsNotExist(err) {
 			return cfg, nil

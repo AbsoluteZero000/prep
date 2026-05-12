@@ -13,7 +13,7 @@ func parseDOCX(path string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("opening DOCX archive: %w", err)
 	}
-	defer r.Close()
+	defer func() { _ = r.Close() }()
 
 	var documentXML []byte
 	for _, f := range r.File {
@@ -23,7 +23,7 @@ func parseDOCX(path string) (string, error) {
 				return "", fmt.Errorf("opening document.xml: %w", err)
 			}
 			documentXML, err = io.ReadAll(rc)
-			rc.Close()
+			_ = rc.Close()
 			if err != nil {
 				return "", fmt.Errorf("reading document.xml: %w", err)
 			}
@@ -39,6 +39,7 @@ func parseDOCX(path string) (string, error) {
 	return text, nil
 }
 
+//nolint:gocyclo
 func extractDocxText(xmlContent string) string {
 	var buf bytes.Buffer
 

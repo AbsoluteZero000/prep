@@ -137,6 +137,8 @@ func (e *Engine) ensureSystemPrompt() error {
 }
 
 // RunTurn processes a single interview turn: validate input, get response, evaluate.
+//
+//nolint:gocyclo
 func (e *Engine) RunTurn(ctx context.Context, answer string, callbacks UICallbacks) (*models.Turn, error) {
 	// Ensure system prompt is set before the first turn
 	if err := e.ensureSystemPrompt(); err != nil {
@@ -157,11 +159,15 @@ func (e *Engine) RunTurn(ctx context.Context, answer string, callbacks UICallbac
 		}
 		e.session.Turns = append(e.session.Turns, *turn)
 		e.session.UpdatedAt = time.Now()
-		e.store.SaveSession(e.session)
+		if err := e.store.SaveSession(e.session); err != nil {
+			return nil, fmt.Errorf("saving session after skip: %w", err)
+		}
 		return turn, nil
 	case "quit":
 		e.session.MarkAborted()
-		e.store.SaveSession(e.session)
+		if err := e.store.SaveSession(e.session); err != nil {
+			return nil, fmt.Errorf("saving session after quit: %w", err)
+		}
 		return nil, ErrUserQuit
 	case "hint":
 		hint, err := e.generateHint(ctx)

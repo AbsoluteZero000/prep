@@ -114,10 +114,10 @@ func runEditor(prompt string) (string, error) {
 		return "", err
 	}
 
-	m = finalModel.(editorModel)
+	m = finalModel.(editorModel) //nolint:errcheck // safe assertion
 
 	if m.ctrlCPressed {
-		syscall.Kill(syscall.Getpid(), syscall.SIGINT)
+		_ = syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 		time.Sleep(2 * time.Second)
 		os.Exit(0)
 	}

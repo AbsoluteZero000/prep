@@ -69,7 +69,7 @@ func (s *Store) SaveSession(sess *models.Session) error {
 // LoadSession reads a session from disk by ID.
 func (s *Store) LoadSession(id string) (*models.Session, error) {
 	path := filepath.Join(s.sessionsDir(), id+".json")
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) //nolint:gosec // session path is within data dir
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil, ErrSessionNotFound
@@ -202,7 +202,7 @@ func (s *Store) LoadCachedResume(hash string) (string, bool) {
 		return "", false
 	}
 	path := filepath.Join(s.cacheDir(), hash+".txt")
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) //nolint:gosec // hash-based path within data dir
 	if err != nil {
 		return "", false
 	}
