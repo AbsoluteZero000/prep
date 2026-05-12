@@ -1,0 +1,25 @@
+John Doe
+john@example.com | (555) 123-4567 | github.com/johndoe
+
+Professional Summary
+Experienced software engineer with 8+ years building distributed systems.
+
+Experience
+Senior Software Engineer, Acme Corp (2020-Present)
+- Led migration of monolith to microservices using Go and Kubernetes
+- Reduced deployment time by 80% with CI/CD pipelines
+- Mentored 5 junior engineers
+
+Software Engineer, Beta Inc (2017-2020)
+- Built REST APIs serving 10M+ requests/day
+- Designed fault-tolerant message queue system
+
+Education
+B.S. Computer Science, State University (2013-2017)
+
+Skills
+Go, Python, Kubernetes, Docker, PostgreSQL, Redis, gRPC, GraphQL
+
+Projects
+- OpenSource CLI tool (500+ GitHub stars)
+- Real-time analytics dashboard

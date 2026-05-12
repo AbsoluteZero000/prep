@@ -1,0 +1,13 @@
+Generate {{.NumQuestions}} interview questions for a {{.Difficulty}} {{.Role}} position based on the following resume:
+
+{{.Resume}}
+
+Rules:
+- Mix question types: behavioral (40%), technical depth (40%), situational (20%)
+- Reference specific items from the resume (project names, companies, technologies)
+- Order from warm-up to challenging
+- No duplicate themes
+- Reference actual companies and projects from the resume
+
+Return ONLY a JSON object with a "questions" field containing an array of strings. No preamble, no markdown fences.
+Example: {"questions": ["Question 1", "Question 2"]}

@@ -1,0 +1,18 @@
+The interview session is complete. Here is the full Q&A:
+{{range .Turns}}
+Q: {{.Question}}
+A: {{.Answer}}
+Score: {{.Score.Score}}/10
+{{end}}
+
+Return ONLY a JSON object with a "summary" field, no markdown fences:
+{
+  "summary": {
+    "overall_score": 1-10,
+    "overall_assessment": "...",
+    "top_strengths": ["...", "..."],
+    "critical_gaps": ["...", "..."],
+    "recommended_study_topics": ["...", "..."],
+    "hiring_recommendation": "strong_yes|yes|maybe|no"
+  }
+}

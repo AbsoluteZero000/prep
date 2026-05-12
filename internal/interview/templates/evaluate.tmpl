@@ -1,0 +1,25 @@
+{{if .Context}}{{.Context}}
+
+{{end}}Evaluate this answer for a {{.Role}} position.
+
+QUESTION: {{.Question}}
+ANSWER: {{.Answer}}
+
+Scoring guide (use the full range):
+- 9-10 = Exceptional (comprehensive, specific examples/metrics, well-structured)
+- 7-8 = Strong (good specifics, minor depth gaps)
+- 5-6 = Adequate (addresses question, some relevant points, lacks depth)
+- 3-4 = Weak (partially addresses, vague, missing key elements)
+- 1-2 = Poor (off-topic, incorrect, or insufficient)
+
+List 2-4 specific strengths AND 2-4 specific gaps. Be fair.
+
+Return ONLY valid JSON, no markdown:
+{
+  "score": <1-10>,
+  "strengths": ["...", "..."],
+  "gaps": ["...", "..."],
+  "ideal_answer_summary": "...",
+  "follow_up_warranted": true or false,
+  "follow_up_question": "a single probing question on the biggest gap"
+}

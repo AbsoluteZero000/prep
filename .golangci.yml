@@ -1,0 +1,18 @@
+linters:
+  enable:
+    - errcheck
+    - govet
+    - staticcheck
+    - gosec
+    - gocyclo
+    - misspell
+    - unconvert
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+  errcheck:
+    check-type-assertions: true
+
+issues:
+  exclude-use-default: false
