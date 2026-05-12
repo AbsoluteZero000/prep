@@ -199,16 +199,29 @@ func runStart(cmd *cobra.Command, args []string) error {
 			return nil
 		}
 
+		var fbSpinner *ui.Spinner
+		var streamStarted bool
 		callbacks := interview.UICallbacks{
 			OnProcessing: func() {
-				fmt.Print("\nThinking...")
+				fbSpinner = ui.NewSpinner("Evaluating your answer")
+				fbSpinner.Start()
 			},
 			OnStreaming: func(chunk string) {
-				fmt.Print(chunk)
+				if !streamStarted {
+					streamStarted = true
+					if fbSpinner != nil {
+						fbSpinner.Stop()
+					}
+					fmt.Print(ui.Colorize("─── Feedback ───\n", ui.ColorBold))
+				}
+				fmt.Print(ui.Colorize(chunk, ui.ColorMagenta))
 			},
 		}
 
 		turn, err := engine.RunTurn(context.Background(), answer, callbacks)
+		if fbSpinner != nil && !streamStarted {
+			fbSpinner.Stop()
+		}
 		if err != nil {
 			if err == interview.ErrEmptyAnswer {
 				fmt.Println("Please provide an answer. Type 'skip' to skip.")
@@ -238,7 +251,11 @@ func runStart(cmd *cobra.Command, args []string) error {
 				return nil
 			}
 
+			streamStarted = false
 			score, err := engine.RunFollowUp(context.Background(), fuq, fua, furDepth, callbacks)
+			if fbSpinner != nil && !streamStarted {
+				fbSpinner.Stop()
+			}
 			if err != nil {
 				return fmt.Errorf("processing follow-up: %w", err)
 			}

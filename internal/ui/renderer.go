@@ -32,7 +32,7 @@ func PrintScore(score models.Score) {
 		fmt.Printf("  %s %s\n", Colorize("Strengths:", ColorGreen), strings.Join(score.Strengths, ", "))
 	}
 	if len(score.Gaps) > 0 {
-		fmt.Printf("  %s %s\n", Colorize("Gaps:", ColorYellow), strings.Join(score.Gaps, ", "))
+		fmt.Printf("  %s %s\n", Colorize("Gaps:", ColorRed), strings.Join(score.Gaps, ", "))
 	}
 	fmt.Println()
 }
