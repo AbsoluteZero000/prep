@@ -189,7 +189,7 @@ func TestNewEngine(t *testing.T) {
 func TestGenerateQuestions_Success(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]any{
+		_ = json.NewEncoder(w).Encode(map[string]any{
 			"id":      "gen-123",
 			"object":  "chat.completion",
 			"created": 1234567890,
@@ -236,7 +236,7 @@ func TestGenerateQuestions_Success(t *testing.T) {
 func TestGenerateQuestions_Deduplicates(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]any{
+		_ = json.NewEncoder(w).Encode(map[string]any{
 			"id": "gen-123",
 			"choices": []map[string]any{
 				{
@@ -263,7 +263,7 @@ func TestGenerateQuestions_Deduplicates(t *testing.T) {
 	sess := NewSession("Engineer", models.ModeMixed, models.DiffMid, resume.ParseResult{Hash: "abc"}, 5)
 
 	engine := NewEngine(client, store, sess, 800)
-	engine.GenerateQuestions(context.Background())
+	_ = engine.GenerateQuestions(context.Background())
 	if len(sess.Questions) != 2 {
 		t.Fatalf("expected 2 unique questions, got %d: %v", len(sess.Questions), sess.Questions)
 	}
@@ -272,7 +272,7 @@ func TestGenerateQuestions_Deduplicates(t *testing.T) {
 func TestEvaluate(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]any{
+		_ = json.NewEncoder(w).Encode(map[string]any{
 			"id": "eval-123",
 			"choices": []map[string]any{
 				{
@@ -319,7 +319,7 @@ func TestEvaluate(t *testing.T) {
 func TestEvaluate_ClampsScore(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]any{
+		_ = json.NewEncoder(w).Encode(map[string]any{
 			"id": "eval-123",
 			"choices": []map[string]any{
 				{
@@ -417,7 +417,7 @@ func TestRunTurn_Empty(t *testing.T) {
 func TestRunTurn_Hint(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]any{
+		_ = json.NewEncoder(w).Encode(map[string]any{
 			"id": "hint-123",
 			"choices": []map[string]any{
 				{

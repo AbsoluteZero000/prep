@@ -222,7 +222,7 @@ func TestParse_UnsupportedExtension(t *testing.T) {
 	// Create a temp file with unsupported extension
 	tmpDir := t.TempDir()
 	path := filepath.Join(tmpDir, "resume.xyz")
-	os.WriteFile(path, []byte("hello world"), 0644)
+	_ = os.WriteFile(path, []byte("hello world"), 0600)
 
 	_, err := Parse(path)
 	if err != ErrUnsupportedFormat {
@@ -243,7 +243,7 @@ func TestParse_TextWithMarkdownContent(t *testing.T) {
 func TestParse_ShortResumeReturnsError(t *testing.T) {
 	tmpDir := t.TempDir()
 	path := filepath.Join(tmpDir, "short.txt")
-	os.WriteFile(path, []byte("Hello world."), 0644)
+	_ = os.WriteFile(path, []byte("Hello world."), 0600)
 
 	_, err := Parse(path)
 	if err != ErrResumeTooShort {
@@ -254,7 +254,7 @@ func TestParse_ShortResumeReturnsError(t *testing.T) {
 func TestParse_EmptyFileReturnsError(t *testing.T) {
 	tmpDir := t.TempDir()
 	path := filepath.Join(tmpDir, "empty.txt")
-	os.WriteFile(path, []byte{}, 0644)
+	_ = os.WriteFile(path, []byte{}, 0600)
 
 	_, err := Parse(path)
 	if err != ErrEmptyResume {
@@ -278,7 +278,7 @@ func TestTruncateToTokenBudget(t *testing.T) {
 func TestParse_ResumeHeuristicWarning(t *testing.T) {
 	tmpDir := t.TempDir()
 	path := filepath.Join(tmpDir, "notaresume.txt")
-	os.WriteFile(path, []byte(strings.Repeat("Lorem ipsum dolor sit amet. ", 30)), 0644)
+	_ = os.WriteFile(path, []byte(strings.Repeat("Lorem ipsum dolor sit amet. ", 30)), 0600)
 
 	result, err := Parse(path)
 	if err != nil {
@@ -333,7 +333,7 @@ func writeTestPDF(t *testing.T, text string) string {
 	buf.WriteString(fmt.Sprintf("startxref\n%d\n%%%%EOF\n", xrefOffset))
 
 	path := filepath.Join(t.TempDir(), "resume.pdf")
-	if err := os.WriteFile(path, buf.Bytes(), 0644); err != nil {
+	if err := os.WriteFile(path, buf.Bytes(), 0600); err != nil {
 		t.Fatal(err)
 	}
 	return path
@@ -357,11 +357,11 @@ func writeTestDOCX(t *testing.T, text string) string {
 	docXML.WriteString("</w:body></w:document>")
 
 	path := filepath.Join(t.TempDir(), "resume.docx")
-	f, err := os.Create(path)
+	f, err := os.Create(path) //nolint:gosec
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	zw := zip.NewWriter(f)
 	w, err := zw.Create("word/document.xml")
@@ -382,7 +382,7 @@ func writeTestDOCX(t *testing.T, text string) string {
 func writeTestTXT(t *testing.T, text string) string {
 	t.Helper()
 	path := filepath.Join(t.TempDir(), "resume.txt")
-	if err := os.WriteFile(path, []byte(text), 0644); err != nil {
+	if err := os.WriteFile(path, []byte(text), 0600); err != nil {
 		t.Fatal(err)
 	}
 	return path

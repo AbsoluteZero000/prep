@@ -82,7 +82,7 @@ func TestLoadSession_NotFound(t *testing.T) {
 func TestLoadSession_Corrupt(t *testing.T) {
 	s := newTestStore(t)
 	path := filepath.Join(s.sessionsDir(), "corrupt.json")
-	os.WriteFile(path, []byte("{invalid json}"), 0600)
+	_ = os.WriteFile(path, []byte("{invalid json}"), 0600)
 
 	_, err := s.LoadSession("corrupt")
 	if err == nil || err == ErrSessionNotFound {
@@ -106,12 +106,12 @@ func TestListSessions(t *testing.T) {
 	sess1 := testSession()
 	sess1.ID = "first"
 	sess1.CreatedAt = time.Now().Add(-time.Hour)
-	s.SaveSession(sess1)
+	_ = s.SaveSession(sess1)
 
 	sess2 := testSession()
 	sess2.ID = "second"
 	sess2.CreatedAt = time.Now()
-	s.SaveSession(sess2)
+	_ = s.SaveSession(sess2)
 
 	metas, err = s.ListSessions()
 	if err != nil {
@@ -129,7 +129,7 @@ func TestListSessions(t *testing.T) {
 func TestDeleteSession(t *testing.T) {
 	s := newTestStore(t)
 	sess := testSession()
-	s.SaveSession(sess)
+	_ = s.SaveSession(sess)
 
 	if err := s.DeleteSession("test-123"); err != nil {
 		t.Fatal(err)
@@ -176,7 +176,7 @@ func TestExportMarkdown(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) //nolint:gosec
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -252,9 +252,9 @@ func TestListSessions_SkipsCorrupt(t *testing.T) {
 	// Write a valid session and a corrupt one
 	sess := testSession()
 	sess.ID = "valid"
-	s.SaveSession(sess)
+	_ = s.SaveSession(sess)
 
-	os.WriteFile(filepath.Join(s.sessionsDir(), "broken.json"), []byte("bad json"), 0600)
+	_ = os.WriteFile(filepath.Join(s.sessionsDir(), "broken.json"), []byte("bad json"), 0600)
 
 	metas, err := s.ListSessions()
 	if err != nil {

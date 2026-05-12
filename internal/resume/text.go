@@ -10,7 +10,7 @@ import (
 )
 
 func parseText(path string) (string, error) {
-	data, err := os.ReadFile(path)
+	data, err := os.ReadFile(path) //nolint:gosec // user-provided path is intentional
 	if err != nil {
 		return "", fmt.Errorf("reading text file: %w", err)
 	}

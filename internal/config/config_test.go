@@ -17,13 +17,13 @@ func TestLoad_ReturnsErrorOnMissingAPIKey(t *testing.T) {
 
 func TestLoad_EnvVarOverridesFile(t *testing.T) {
 	orig := os.Getenv("OPENROUTER_API_KEY")
-	defer os.Setenv("OPENROUTER_API_KEY", orig)
-	os.Setenv("OPENROUTER_API_KEY", "sk-or-test123456789012345678901234567890")
+	defer func() { _ = os.Setenv("OPENROUTER_API_KEY", orig) }()
+	_ = os.Setenv("OPENROUTER_API_KEY", "sk-or-test123456789012345678901234567890")
 
 	// set up a temp config dir
 	tdir := t.TempDir()
-	os.Setenv("PREP_CONFIG", filepath.Join(tdir, "config.yaml"))
-	defer os.Unsetenv("PREP_CONFIG")
+	_ = os.Setenv("PREP_CONFIG", filepath.Join(tdir, "config.yaml"))
+	defer func() { _ = os.Unsetenv("PREP_CONFIG") }()
 
 	// write a config with a different key
 	cfg := DefaultConfig()
@@ -44,8 +44,8 @@ func TestLoad_EnvVarOverridesFile(t *testing.T) {
 func TestSave_WritesAtomically(t *testing.T) {
 	tdir := t.TempDir()
 	path := filepath.Join(tdir, "config.yaml")
-	os.Setenv("PREP_CONFIG", path)
-	defer os.Unsetenv("PREP_CONFIG")
+	_ = os.Setenv("PREP_CONFIG", path)
+	defer func() { _ = os.Unsetenv("PREP_CONFIG") }()
 
 	cfg := DefaultConfig()
 	cfg.APIKey = "sk-or-test123456789012345678901234567890"
@@ -127,8 +127,8 @@ func TestValidate_DefaultModelOnEmpty(t *testing.T) {
 
 func TestLoad_ReturnsDefaultsOnMissingFile(t *testing.T) {
 	tdir := t.TempDir()
-	os.Setenv("PREP_CONFIG", filepath.Join(tdir, "nonexistent", "config.yaml"))
-	defer os.Unsetenv("PREP_CONFIG")
+	_ = os.Setenv("PREP_CONFIG", filepath.Join(tdir, "nonexistent", "config.yaml"))
+	defer func() { _ = os.Unsetenv("PREP_CONFIG") }()
 
 	cfg, err := Load()
 	if err != nil {
@@ -155,11 +155,11 @@ func TestLoad_TrimSpaceAroundAPIKey(t *testing.T) {
 	tdir := t.TempDir()
 	path := filepath.Join(tdir, "config.yaml")
 	content := "api_key: \"sk-or-test123456789012345678901234567890\"\nmodel: test"
-	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
+	if err := os.WriteFile(path, []byte(content), 0600); err != nil {
 		t.Fatal(err)
 	}
-	os.Setenv("PREP_CONFIG", path)
-	defer os.Unsetenv("PREP_CONFIG")
+	_ = os.Setenv("PREP_CONFIG", path)
+	defer func() { _ = os.Unsetenv("PREP_CONFIG") }()
 
 	cfg, err := Load()
 	if err != nil {
